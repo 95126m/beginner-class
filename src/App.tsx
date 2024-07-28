@@ -1,38 +1,66 @@
-// 기본 내보내기 : default 붙은 거, 이름 내보내기
-// - eslint-disable-next-line (무시하는 방법이 있긴 한데 비추)
+import { useState, useEffect } from 'react'
+export interface Root {
+  total: number
+  users: User[]
+}
 
-import { useState } from 'react' // useState 를 리액트의 속성에서 가지고옴
-export default function App() {
-  // 데이터
-  // useState = Hook
-  // 구조 분해 할당
-  const [users, setUsers] = useState([
-    { name: 'Neo', age: 51 }, 
-    { name: 'Lewis', age: 22 },
-    { name: 'Evan', age: 18 }
-  ])
+export interface User {
+  id: string
+  name: string
+  age: number
+  isValid: boolean
+  emails: string[]
+  photo?: Photo
+}
+
+export interface Photo {
+  name: string
+  size: number
+  mimeType: string
+  url: string
+}
+import TheLoader from './components/TheLoader'
+
+export default function App() { // 데이터, useState = Hook
+  const [users, setUsers] = useState<User[]>([]) //never[]
   const [count, setCount] = useState(31)
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(true)
   function increase() {
-    setCount (count + 1)
+    setCount(count + 1)
   }
-  return (
-    // 화면
-    // Flagment : <></>
+  // App 컴포넌트가 준비되었을 때 (Mount, 최초 랜더링), useEffect(콜백, 종속성배열- 의존성배열)
+  useEffect(() => {
+    getUsers()
+  }, [])
+  async function getUsers() { // 사용자를 가져와라
+    try {
+      await new Promise(resolve => setTimeout(resolve, 3000)) // 3초 기다린 후 실행
+      const res = await fetch('https://api.heropy.dev/v0/users')
+      const data = await res.json()
+      console.log('응답결과', data)
+      setUsers(data.users)
+    } catch (error) {
+      if (error instanceof Error) {
+        const message = '서버가 폭발했어요'
+        console.error('에러남', message)
+        setMessage(message)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+  return ( // 화면    
     <>
-      <div>
-        {count}명
-      </div>
+      <div>{count}명</div>
       <button onClick={increase}>증가</button>
+      <div>{loading && <TheLoader />}</div>
+      <div>{message}</div>
       <ul>
         {users.map(user => (
-          <li key={user.name}>
-            {user.name}
-          </li>
+          <li key={user.name}>{user.name}</li>
         ))}
       </ul>
     </>
   )
 }
-
-// 반응성 (데이터의 변경에 화면이 같이 변경된다) → 반응형 데이터
-// 모던 프레임워크 (React, Vue, Angular) 정체성

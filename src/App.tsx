@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment } from 'react'
 import TheLoader from './components/TheLoader'
-import UserItem from './components/TodoItem'
+import TodoItem from './components/TodoItem'
 
 export type Todos = Todo[]
 export interface Todo {
@@ -22,7 +22,7 @@ export default function App() {
   // 사용자를 가져와라
   async function getTodos() { 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // await new Promise(resolve => setTimeout(resolve, 2000))
       const res = await fetch(
         'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos', 
         {
@@ -54,7 +54,7 @@ export default function App() {
       <ul>
         {todos.map(todo => (
           <Fragment key={todo.id}>
-            <UserItem abc={todo} />
+            <TodoItem todo={todo} />
           </Fragment>
         ))}
       </ul>

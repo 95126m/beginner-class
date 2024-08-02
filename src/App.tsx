@@ -54,7 +54,10 @@ export default function App() {
       <ul>
         {todos.map(todo => (
           <Fragment key={todo.id}>
-            <TodoItem todo={todo} />
+            <TodoItem
+              todo={todo}
+              getTodos={getTodos}
+            />
           </Fragment>
         ))}
       </ul>

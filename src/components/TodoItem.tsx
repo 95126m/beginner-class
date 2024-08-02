@@ -1,12 +1,17 @@
 import {useState} from 'react'
 import type { Todo } from '../App'
-export default function UserItem({ todo }: { todo: Todo }) {
+export default function TodoItem({
+    todo,
+    getTodos
+}: {
+        todo: Todo;
+        getTodos: () => void
+}) {
     const [title, setTitle] = useState(todo.title)
     async function keydownHandler(event: React.KeyboardEvent<HTMLInputElement>) {
         if (event.key === 'Enter') { updateTodo() }
     }
     async function updateTodo() {
-        console.log('서버로 전송', title)
         const res = await fetch(
             `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${todo.id}`, 
             {
@@ -24,6 +29,7 @@ export default function UserItem({ todo }: { todo: Todo }) {
           )
         const data = await res.json()
         console.log(data, title)
+        getTodos()
     }
     async function deleteTodo() {
         await fetch(

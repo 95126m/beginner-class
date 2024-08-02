@@ -56,7 +56,11 @@ export default function App() {
       })
     })
   }
-  // 화면
+  function deleteTodo(todoToDelete: Todo) {
+    setTodos(todos => {
+      return todos.filter(todo => todo.id !== todoToDelete.id)
+    })
+  }
   return (   
     <>
       <div>{loading && <TheLoader />}</div>
@@ -67,6 +71,7 @@ export default function App() {
             <TodoItem
               todo={todo}
               setTodo={setTodo}
+              deleteTodo={deleteTodo}
             />
           </Fragment>
         ))}

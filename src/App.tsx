@@ -46,7 +46,21 @@ export default function App() {
       setLoading(false)
     }
   }
-  // 화면
+  function setTodo(updatedTodo: Todo) {
+    setTodos(todos => {
+      return todos.map(todo => {
+        if (todo.id === updatedTodo.id) {
+          return updatedTodo
+        }
+        return todo
+      })
+    })
+  }
+  function deleteTodo(todoToDelete: Todo) {
+    setTodos(todos => {
+      return todos.filter(todo => todo.id !== todoToDelete.id)
+    })
+  }
   return (   
     <>
       <div>{loading && <TheLoader />}</div>
@@ -56,7 +70,8 @@ export default function App() {
           <Fragment key={todo.id}>
             <TodoItem
               todo={todo}
-              getTodos={getTodos}
+              setTodo={setTodo}
+              deleteTodo={deleteTodo}
             />
           </Fragment>
         ))}

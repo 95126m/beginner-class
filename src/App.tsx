@@ -1,6 +1,7 @@
 import { useState, useEffect, Fragment } from 'react'
 import TheLoader from './components/TheLoader'
 import TodoItem from './components/TodoItem'
+import TodoCreator from './components/TodoCreator'
 
 export type Todos = Todo[]
 export interface Todo {
@@ -11,25 +12,25 @@ export interface Todo {
   createdAt: string
   updatedAt: string
 }
-export default function App() { 
-  const [todos, setTodos] = useState<Todos>([]) 
-  const [message, setMessage] = useState('') 
+export default function App() {
+  const [todos, setTodos] = useState<Todos>([])
+  const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(true)
   // App 컴포넌트가 준비되었을 때 (Mount, 최초 랜더링), useEffect(콜백, 종속성배열- 의존성배열)
   useEffect(() => {
     getTodos()
   }, [])
   // 사용자를 가져와라
-  async function getTodos() { 
+  async function getTodos() {
     try {
       // await new Promise(resolve => setTimeout(resolve, 2000))
       const res = await fetch(
-        'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos', 
+        'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos',
         {
-        headers: { 
+          headers: {
             'content-type': 'application/json',
-            apikey: '5X8Z1k7M2vU5Q',
-            username: 'Grepp_KDT4_ParkYoungWoong'
+            apikey: 'KDT9_AHMq2s7n',
+            username: 'FE1_KimYoungEun'
           }
         }
       )
@@ -61,8 +62,10 @@ export default function App() {
       return todos.filter(todo => todo.id !== todoToDelete.id)
     })
   }
-  return (   
+
+  return (
     <>
+      <TodoCreator getTodos={getTodos} />
       <div>{loading && <TheLoader />}</div>
       <div>{message}</div>
       <ul>

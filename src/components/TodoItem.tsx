@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import type { Todo } from '../App'
+import { Link } from 'react-router-dom'
+import type { Todo } from '@/routes/Main'
 export default function TodoItem({
   todo,
   setTodo,
@@ -16,11 +17,6 @@ export default function TodoItem({
     }
   }
   async function updateTodo() {
-    // 낙관적 업데이트
-    // setTodo({
-    //     ...todo, // 얕은 복사
-    //     title
-    // })
     const res = await fetch(
       `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${todo.id}`,
       {
@@ -57,7 +53,9 @@ export default function TodoItem({
 
   return (
     <li>
-      {todo.title}
+      <Link to={`/${todo.id}`}>
+        {todo.title}
+      </Link>
       <input
         value={title}
         onChange={e => setTitle(e.target.value)}

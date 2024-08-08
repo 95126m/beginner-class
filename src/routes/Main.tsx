@@ -1,7 +1,8 @@
 import { useState, useEffect, Fragment } from 'react'
-import TheLoader from './components/TheLoader'
-import TodoItem from './components/TodoItem'
-import TodoCreator from './components/TodoCreator'
+import { Outlet } from 'react-router-dom' // 모듈용
+import TheLoader from '@/components/TheLoader'
+import TodoItem from '@/components/TodoItem'
+import TodoCreator from '@/components/TodoCreator'
 
 export type Todos = Todo[]
 export interface Todo {
@@ -23,7 +24,6 @@ export default function App() {
   // 사용자를 가져와라
   async function getTodos() {
     try {
-      // await new Promise(resolve => setTimeout(resolve, 2000))
       const res = await fetch(
         'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos',
         {
@@ -79,6 +79,7 @@ export default function App() {
           </Fragment>
         ))}
       </ul>
+      <Outlet />
     </>
   )
 }

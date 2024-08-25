@@ -1,5 +1,6 @@
-import { create } from 'zustand' 
-import { combine } from 'zustand/middleware' 
+import axios from 'axios'
+import { create } from 'zustand'
+import { combine } from 'zustand/middleware'
 
 export type Todos = Todo[]
 export interface Todo {
@@ -21,18 +22,7 @@ export const useTodosStore = create(
     function (set) {
       async function getTodos() {
         try {
-          const res = await fetch(
-            'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos',
-            {
-              method: 'GET',
-              headers: {
-                'content-type': 'application/json',
-                apikey: 'KDT9_AHMq2s7n',
-                username: 'FE1_ParkSuHyun'
-              }
-            }
-          )
-          const data = await res.json()
+          const { data } = await axios.post('/api/todos')
           console.log('응답결과: ', data)
           set({
             todos: data
@@ -54,21 +44,14 @@ export const useTodosStore = create(
 
       async function updateTodo(updatedTodo: Todo) {
         try {
-          await fetch(
-            `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${updatedTodo.id}`,
-            {
-              method: 'PUT',
-              headers: {
-                'content-type': 'application/json',
-                apikey: 'KDT9_AHMq2s7n',
-                username: 'FE1_ParkSuHyun'
-              },
-              body: JSON.stringify({
-                title: updatedTodo.title,
-                done: updatedTodo.done
-              })
+          await axios.post('/api/todos', {
+            endpoint: updatedTodo.id,
+            method: 'PUT',
+            data: {
+              title: updatedTodo.title,
+              done: updatedTodo.done
             }
-          )
+          })
           getTodos()
         } catch (error) {
           console.error(error)
@@ -76,18 +59,11 @@ export const useTodosStore = create(
       }
 
       async function deleteTodo(deletedTodo: Todo) {
-        await fetch(
-          `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${deletedTodo.id}`, //:todoId
-          {
-            method: 'DELETE',
-            headers: {
-              'content-type': 'application/json',
-              apikey: 'KDT9_AHMq2s7n',
-              username: 'FE1_ParkSuHyun'
-            }
-          }
-        )
-        getTodos()
+        await axios.post('/api/todos', {
+          endpoint: deletedTodo.id,
+          method: 'DELETE'
+        })
+        await getTodos()
       }
 
       return {
@@ -99,14 +75,10 @@ export const useTodosStore = create(
   )
 )
 
-//  1.
-// set ({
-//   상태이름: 새로운 값
-// })
+// const state = get()
+// @ts-ignore
+// state.getTodos()
 
-//  2.
-// set (() => {})
-// set((state) => {})
-// set((state) => { return {
-// 상태이름: 새로운 값
-// }})
+//@ts-ignore
+// await get().getTodos()
+// promise 인스턴스를 반환하는 함수에만 await를 사용할 수 있다.

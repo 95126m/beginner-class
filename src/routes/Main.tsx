@@ -1,67 +1,19 @@
-import { useState, useEffect, Fragment } from 'react'
-import { Outlet } from 'react-router-dom' // 모듈용
+import { useEffect, Fragment } from 'react'
+import { Outlet } from 'react-router-dom'
 import TheLoader from '@/components/TheLoader'
 import TodoItem from '@/components/TodoItem'
 import TodoCreator from '@/components/TodoCreator'
+import { useTodosStore } from '@/stores/todos'
 
-export type Todos = Todo[]
-export interface Todo {
-  id: string
-  order: number
-  title: string
-  done: boolean
-  createdAt: string
-  updatedAt: string
-}
 export default function App() {
-  const [todos, setTodos] = useState<Todos>([])
-  const [message, setMessage] = useState('')
-  const [loading, setLoading] = useState(true)
-  // App 컴포넌트가 준비되었을 때 (Mount, 최초 랜더링), useEffect(콜백, 종속성배열- 의존성배열)
+  const todos = useTodosStore(state => state.todos)
+  const message = useTodosStore(state => state.message)
+  const loading = useTodosStore(state => state.loading)
+  const getTodos = useTodosStore(state => state.getTodos)
+
   useEffect(() => {
     getTodos()
   }, [])
-  // 사용자를 가져와라
-  async function getTodos() {
-    try {
-      const res = await fetch(
-        'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos',
-        {
-          headers: {
-            'content-type': 'application/json',
-            apikey: 'KDT9_AHMq2s7n',
-            username: 'FE1_KimYoungEun'
-          }
-        }
-      )
-      const data = await res.json()
-      console.log('응답결과', data)
-      setTodos(data)
-    } catch (error) {
-      if (error instanceof Error) {
-        const message = '서버가 폭발했어요'
-        console.error('에러남', message)
-        setMessage(message)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
-  function setTodo(updatedTodo: Todo) {
-    setTodos(todos => {
-      return todos.map(todo => {
-        if (todo.id === updatedTodo.id) {
-          return updatedTodo
-        }
-        return todo
-      })
-    })
-  }
-  function deleteTodo(todoToDelete: Todo) {
-    setTodos(todos => {
-      return todos.filter(todo => todo.id !== todoToDelete.id)
-    })
-  }
 
   return (
     <>
@@ -71,11 +23,7 @@ export default function App() {
       <ul>
         {todos.map(todo => (
           <Fragment key={todo.id}>
-            <TodoItem
-              todo={todo}
-              setTodo={setTodo}
-              deleteTodo={deleteTodo}
-            />
+            <TodoItem todo={todo} />
           </Fragment>
         ))}
       </ul>
@@ -83,9 +31,3 @@ export default function App() {
     </>
   )
 }
-
-// fetch('주소', {
-//   headers: {},
-//   body: {},
-//   method: 'GET'
-// })

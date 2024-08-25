@@ -14,17 +14,20 @@ API 사용 예시:
 
 ```js
 async function createTodo() {
-  const res = await fetch('https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'apikey': '5X8Z1k7M2vU5Q',
-      'username': 'Grepp_KDT4_ParkYoungWoong'
-    },
-    body: JSON.stringify({
-      title: '아침 먹기!'
-    })
-  })
+  const res = await fetch(
+    'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos',
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        apikey: 'KDT9_AHMq2s7n',
+        username: 'FE1_KimYoungEun'
+      },
+      body: JSON.stringify({
+        title: '아침 먹기!'
+      })
+    }
+  )
   const json = await res.json()
   console.log(json)
 

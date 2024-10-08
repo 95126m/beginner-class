@@ -43,6 +43,7 @@ export default function TodoItem({ todo }: { todo: Todo }) {
         onKeyDown={keydownHandler}
       />
       <button onClick={() => deleteTodo(todo)}>삭제</button>
+      <button className='drag-handle'>핸들</button>
     </li>
   )
 }
